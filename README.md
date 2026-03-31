@@ -1,33 +1,50 @@
-# Fiesta Party Hire Yeppoon
+# Fiesta Party Hire Yeppoon — Full-Stack Website
 
-Static website package prepared for GitHub Pages and standard static hosting.
+This package turns the uploaded Fiesta Party Hire Yeppoon site into a full-stack Node.js + Express + SQLite project.
 
-## Files
+## Features
 
-- `index.html` — main website file
-- `favicon.ico` — site icon
-- `assets/css/style.css` — extracted styles
-- `assets/js/script.js` — extracted scripts
-- `assets/images/` — reserved folder for future local images
+- Preserves the single-site public landing page style
+- Real booking form connected to SQLite
+- Admin dashboard modal backed by API
+- Booking export as JSON
+- Inventory tracking and booking analytics
+- GitHub-ready folder structure
 
-## Open locally
+## Quick start
 
-Open `index.html` in your browser.
+```bash
+npm install
+npm start
+```
 
-## Deploy to GitHub Pages
+Then open:
 
-1. Upload all files and folders in this package to your repository root.
-2. In GitHub, open **Settings** → **Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Select the **main** branch and the **/(root)** folder.
-5. Save, then wait for deployment.
+```bash
+http://localhost:3000
+```
 
-Your site URL will look like:
+## Project structure
 
-`https://<username>.github.io/<repository-name>/`
+- `server.js` — Express server + SQLite API
+- `public/index.html` — main website
+- `public/assets/css/style.css` — styles
+- `public/assets/js/script.js` — frontend behavior
+- `data/fiesta.db` — auto-created SQLite database
 
-## Notes
+## API routes
 
-- All internal references use relative paths.
-- The `assets/images` folder is ready for future local image files.
-- Existing external image URLs were preserved so the current design stays unchanged.
+- `GET /api/health`
+- `GET /api/inventory`
+- `GET /api/bookings`
+- `POST /api/bookings`
+- `DELETE /api/bookings/:id`
+- `DELETE /api/bookings`
+- `POST /api/inventory/reset`
+- `GET /api/bookings/export`
+
+## Deploy notes
+
+For GitHub, push the full project. To run it, deploy on a Node-capable host such as Render, Railway, VPS, or your own server.
+
+GitHub Pages alone will not run the backend because it only hosts static files.

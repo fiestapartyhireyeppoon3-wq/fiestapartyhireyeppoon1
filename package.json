@@ -1,0 +1,15 @@
+{
+  "name": "fiesta-party-hire-yeppoon-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack Fiesta Party Hire Yeppoon website ready for GitHub.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2"
+  }
+}
