@@ -772,23 +772,61 @@
       'Family Gathering': ['Basic or Standard package usually covers flexible seating well.', 'Add extra chairs if guest count may grow close to the event date.', 'Fairy lights give relaxed evening gatherings a warmer feel.']
     };
 
+
+    const safeStorage = (() => {
+      try{
+        const probe = '__fiesta_probe__';
+        localStorage.setItem(probe, '1');
+        localStorage.removeItem(probe);
+        return {
+          get(key){ return localStorage.getItem(key); },
+          set(key, value){ localStorage.setItem(key, value); return true; },
+          remove(key){ localStorage.removeItem(key); return true; }
+        };
+      }catch(err){
+        const memory = {};
+        return {
+          get(key){ return Object.prototype.hasOwnProperty.call(memory, key) ? memory[key] : null; },
+          set(key, value){ memory[key] = String(value); return false; },
+          remove(key){ delete memory[key]; return false; }
+        };
+      }
+    })();
+
+    function hideSplash(force){
+      const splash = document.getElementById('appReadySplash');
+      if(!splash) return;
+      splash.style.opacity = '0';
+      splash.style.visibility = 'hidden';
+      splash.style.pointerEvents = 'none';
+      body.classList.remove('modal-open');
+      body.style.overflow = '';
+      if(force){
+        try{ splash.remove(); }catch(err){}
+        return;
+      }
+      setTimeout(() => {
+        try{ splash.remove(); }catch(err){}
+      }, 450);
+    }
+
     function getBookings(){
-      try{ return JSON.parse(localStorage.getItem(STORAGE_KEYS.bookings)) || []; }
+      try{ return JSON.parse(safeStorage.get(STORAGE_KEYS.bookings)) || []; }
       catch(err){ return []; }
     }
     function setBookings(bookings){
-      localStorage.setItem(STORAGE_KEYS.bookings, JSON.stringify(bookings));
+      safeStorage.set(STORAGE_KEYS.bookings, JSON.stringify(bookings));
     }
     function getInventory(){
       try{
-        const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.inventory));
+        const stored = JSON.parse(safeStorage.get(STORAGE_KEYS.inventory));
         return stored ? { ...DEFAULT_INVENTORY, ...stored } : { ...DEFAULT_INVENTORY };
       }catch(err){
         return { ...DEFAULT_INVENTORY };
       }
     }
     function setInventory(inventory){
-      localStorage.setItem(STORAGE_KEYS.inventory, JSON.stringify(inventory));
+      safeStorage.set(STORAGE_KEYS.inventory, JSON.stringify(inventory));
     }
     function formatMoney(value){
       return `$${Number(value || 0).toFixed(0)} AUD`;
@@ -960,7 +998,7 @@
 '))}`;
     }
     function latestBookingDraft(){
-      try{ return JSON.parse(localStorage.getItem(STORAGE_KEYS.latest)); }
+      try{ return JSON.parse(safeStorage.get(STORAGE_KEYS.latest)); }
       catch(err){ return null; }
     }
     function collectBookingFromForm(){
@@ -1017,7 +1055,7 @@
       inventory.tables -= booking.inventory.tables;
       inventory.decorations -= booking.inventory.decorations;
       setInventory(inventory);
-      localStorage.setItem(STORAGE_KEYS.latest, JSON.stringify(booking));
+      safeStorage.set(STORAGE_KEYS.latest, JSON.stringify(booking));
       renderInvoice(booking);
       renderAnalytics();
       renderAdminTable();
@@ -1074,7 +1112,7 @@
       }, 250);
     }
 
-    const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+    const savedTheme = safeStorage.get(STORAGE_KEYS.theme);
     if(savedTheme === 'light'){
       body.setAttribute('data-theme', 'light');
       themeToggle.textContent = '☀';
@@ -1083,11 +1121,11 @@
       const isLight = body.getAttribute('data-theme') === 'light';
       if(isLight){
         body.removeAttribute('data-theme');
-        localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+        safeStorage.set(STORAGE_KEYS.theme, 'dark');
         themeToggle.textContent = '☾';
       }else{
         body.setAttribute('data-theme', 'light');
-        localStorage.setItem(STORAGE_KEYS.theme, 'light');
+        safeStorage.set(STORAGE_KEYS.theme, 'light');
         themeToggle.textContent = '☀';
       }
     });
@@ -1189,7 +1227,7 @@
         details: document.getElementById('quickDetails').value.trim(),
         createdAt: new Date().toISOString()
       };
-      localStorage.setItem(STORAGE_KEYS.quick, JSON.stringify(data));
+      safeStorage.set(STORAGE_KEYS.quick, JSON.stringify(data));
       if(data.package){ packageSelect.value = data.package; }
       if(data.name && !document.getElementById('name').value){ document.getElementById('name').value = data.name; }
       updateQuoteUI();
@@ -1243,33 +1281,41 @@
     });
     document.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('focus', () => scrollFieldIntoView(el)));
 
-    window.addEventListener('load', () => {
-      const splash = document.getElementById('appReadySplash');
-      const latest = latestBookingDraft();
-      if(latest){ renderInvoice(latest); }
-      renderAnalytics();
-      renderAdminTable();
-      updateSuggestions();
-      updateQuoteUI();
-      setTimeout(() => {
-        if(splash){
-          splash.style.opacity = '0';
-          splash.style.visibility = 'hidden';
-          setTimeout(() => splash.remove(), 400);
-        }
-      }, 450);
-    });
+    let appInitialized = false;
+    function initApp(){
+      if(appInitialized) return;
+      appInitialized = true;
+      try{
+        const latest = latestBookingDraft();
+        if(latest){ renderInvoice(latest); }
+        renderAnalytics();
+        renderAdminTable();
+        updateSuggestions();
+        updateQuoteUI();
+      }catch(err){
+        console.error('Startup error:', err);
+      }
+      setTimeout(() => hideSplash(false), 450);
+    }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.14 });
-    revealEls.forEach(el => observer.observe(el));
+    document.addEventListener('DOMContentLoaded', initApp);
+    window.addEventListener('load', initApp);
+    window.addEventListener('pageshow', initApp);
+    setTimeout(() => hideSplash(true), 2200);
+
+    if('IntersectionObserver' in window){
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14 });
+      revealEls.forEach(el => observer.observe(el));
+    }else{
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
   </script>
 </body>
 </html>
-  <script src="assets/js/script.js" defer></script>
