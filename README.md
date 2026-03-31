@@ -1,45 +1,42 @@
 # Fiesta Party Hire Yeppoon
 
-Static website package prepared for GitHub Pages and standard static hosting.
+Restored, fixed, and GitHub-ready static website package for Fiesta Party Hire Yeppoon.
 
-## Repository
+## Project structure
 
-- GitHub repo: `https://github.com/fiestapartyhireyeppoon3-wq/fiestapartyhireyeppoon1`
-- Expected live URL: `https://fiestapartyhireyeppoon3-wq.github.io/fiestapartyhireyeppoon1/`
-
-## Files
-
-- `index.html` — main website file
-- `favicon.ico` — site icon
-- `assets/css/style.css` — extracted styles
-- `assets/js/script.js` — extracted scripts
-- `assets/images/` — reserved folder for future local image files
+```text
+/
+├── index.html
+├── favicon.ico
+├── README.md
+└── assets/
+    ├── css/
+    │   └── style.css
+    ├── js/
+    │   └── script.js
+    └── images/
+```
 
 ## Open locally
 
-Open `index.html` in your browser.
+1. Extract the ZIP.
+2. Open `index.html` in your browser.
 
 ## Upload to GitHub
 
-1. Open your repository: `https://github.com/fiestapartyhireyeppoon3-wq/fiestapartyhireyeppoon1`
+1. Open your repository on GitHub.
 2. Click **Add file** → **Upload files**.
-3. Upload everything inside this package to the repository root.
+3. Upload `index.html`, `favicon.ico`, `README.md`, and the full `assets` folder.
 4. Commit the changes.
 
 ## Enable GitHub Pages
 
 1. In the repository, open **Settings** → **Pages**.
 2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select the **main** branch and the **/(root)** folder.
-4. Save, then wait for deployment.
+3. Select the `main` branch.
+4. Select the `/ (root)` folder.
+5. Click **Save**.
 
-Your site should publish at:
+## Expected live URL
 
-`https://fiestapartyhireyeppoon3-wq.github.io/fiestapartyhireyeppoon1/`
-
-## Notes
-
-- All internal references use relative paths.
-- The `assets/images` folder is ready for future local image files.
-- Existing external image URLs were preserved so the current design stays unchanged.
-- This is a static site package using pure HTML, CSS, and JavaScript.
+https://fiestapartyhireyeppoon3-wq.github.io/fiestapartyhireyeppoon1/
