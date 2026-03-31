@@ -1,42 +1,33 @@
 # Fiesta Party Hire Yeppoon
 
-Restored, fixed, and GitHub-ready static website package for Fiesta Party Hire Yeppoon.
+Static website package prepared for GitHub Pages and standard static hosting.
 
-## Project structure
+## Files
 
-```text
-/
-├── index.html
-├── favicon.ico
-├── README.md
-└── assets/
-    ├── css/
-    │   └── style.css
-    ├── js/
-    │   └── script.js
-    └── images/
-```
+- `index.html` — main website file
+- `favicon.ico` — site icon
+- `assets/css/style.css` — extracted styles
+- `assets/js/script.js` — extracted scripts
+- `assets/images/` — reserved folder for future local images
 
 ## Open locally
 
-1. Extract the ZIP.
-2. Open `index.html` in your browser.
+Open `index.html` in your browser.
 
-## Upload to GitHub
+## Deploy to GitHub Pages
 
-1. Open your repository on GitHub.
-2. Click **Add file** → **Upload files**.
-3. Upload `index.html`, `favicon.ico`, `README.md`, and the full `assets` folder.
-4. Commit the changes.
+1. Upload all files and folders in this package to your repository root.
+2. In GitHub, open **Settings** → **Pages**.
+3. Under **Build and deployment**, choose **Deploy from a branch**.
+4. Select the **main** branch and the **/(root)** folder.
+5. Save, then wait for deployment.
 
-## Enable GitHub Pages
+Your site URL will look like:
 
-1. In the repository, open **Settings** → **Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select the `main` branch.
-4. Select the `/ (root)` folder.
-5. Click **Save**.
+`https://<username>.github.io/<repository-name>/`
 
-## Expected live URL
+## Notes
 
-https://fiestapartyhireyeppoon3-wq.github.io/fiestapartyhireyeppoon1/
+- All internal references use relative paths.
+- The `assets/images` folder is ready for future local image files.
+- Existing external image URLs were preserved so the current design stays unchanged.
