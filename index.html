@@ -10,8 +10,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="format-detection" content="telephone=yes" />
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjQyIiBmaWxsPSIjZmY1ZmEyIi8+PHRleHQgeD0iOTYiIHk9IjExOCIgc3R5bGU9ImZvbnQ6IDcwMHB4IDkycHggQXJpYWw7IGZpbGw6IHdoaXRlOyB0ZXh0LWFuY2hvcjogbWlkZGxlOyI+RjwvdGV4dD48L3N2Zz4=" />
-
-    <link rel="icon" href="favicon.ico" />
+  <link rel="icon" href="favicon.ico" />
   <title>Fiesta Party Hire Yeppoon Yeppoon | Party Hire & Event Services</title>
   <meta name="description" content="Fiesta Party Hire Yeppoon Yeppoon - marquees, tables and chairs, party decorations, keepsakes, balloons, party hire packages, and individual hire items in Yeppoon, Queensland, Australia." />
   <style>
@@ -971,7 +970,6 @@
       transform:translateX(-50%) translateY(0);
     }
 
-
     body.modal-open{
       overflow:hidden;
       touch-action:none;
@@ -1020,8 +1018,6 @@
       appearance:none;
       -webkit-appearance:none;
     }
-
-
 
     @media (max-width: 1024px){
       .hero-wrap,
@@ -1240,6 +1236,13 @@
         left:10px;
         right:10px;
       }
+      .admin-session-row{
+        align-items:stretch;
+      }
+      .admin-session-actions{
+        width:100%;
+        flex-direction:column;
+      }
     }
 
     @media (max-width: 480px){
@@ -1303,7 +1306,6 @@
         transition:none !important;
       }
     }
-  
 
     .toolbar-row,
     .summary-grid,
@@ -1448,6 +1450,7 @@
       line-height:1.7;
     }
     .admin-modal .modal-card{width:min(1120px,100%)}
+    .admin-login-modal .modal-card{width:min(520px,100%)}
     .admin-table-wrap{
       overflow:auto;
       margin-top:18px;
@@ -1507,6 +1510,42 @@
       pointer-events:none;
     }
     .loading-state{opacity:.75;pointer-events:none}
+    .admin-auth-error{
+      margin-top:6px;
+      color:#ffb4c9;
+      font-weight:700;
+      font-size:.92rem;
+      display:none;
+    }
+    .admin-auth-error.visible{display:block}
+    .admin-auth-note{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:.94rem;
+    }
+    .admin-session-row{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:18px;
+      padding:16px 18px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid var(--line);
+    }
+    .admin-session-meta{
+      display:grid;
+      gap:6px;
+    }
+    .admin-session-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
     @media print{
       body *{visibility:hidden !important}
       #invoicePreview, #invoicePreview *{visibility:visible !important}
@@ -1520,7 +1559,6 @@
         box-shadow:none !important;
       }
     }
-
   </style>
 </head>
 <body>
@@ -2008,7 +2046,7 @@
             </li>
           </ul>
 
-                    <div class="contact-actions">
+          <div class="contact-actions">
             <a class="btn btn-primary" href="https://www.facebook.com/fiestapartyhire" target="_blank" rel="noopener">Visit Facebook</a>
             <a class="btn btn-secondary" href="mailto:fiestapartyhireyeppoon@gmail.com?subject=Fiesta%20Party%20Hire%20Inquiry">MESSAGE US</a>
           </div>
@@ -2095,8 +2133,7 @@
         <a href="https://www.facebook.com/fiestapartyhire" target="_blank" rel="noopener">Facebook</a>
       </div>
     </div>
-  
-</footer>
+  </footer>
 
   <div id="appReadySplash" style="position:fixed;inset:0;z-index:1500;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(8,10,26,0.98), rgba(12,14,36,0.98));transition:opacity .35s ease, visibility .35s ease;">
     <div style="text-align:center;padding:26px 22px;border-radius:24px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);width:min(300px,calc(100% - 28px));box-shadow:0 18px 50px rgba(0,0,0,0.28);">
@@ -2141,12 +2178,47 @@
     </div>
   </div>
 
-  
+  <div class="modal admin-login-modal" id="adminLoginModal" aria-hidden="true">
+    <div class="modal-card glass">
+      <button class="close-btn" id="closeAdminLogin" aria-label="Close admin login">✕</button>
+      <h3 id="adminLoginTitle" style="margin-top:0; font-size:1.5rem;">Admin Access</h3>
+      <p id="adminLoginLead" style="color:var(--muted); line-height:1.75; margin-bottom:0;">
+        Enter the admin password to open the hidden dashboard.
+      </p>
+      <form id="adminLoginForm" style="display:grid; gap:14px; margin-top:18px;">
+        <div class="field">
+          <label for="adminPassword">Password</label>
+          <input id="adminPassword" type="password" placeholder="Enter admin password" autocomplete="current-password" required>
+        </div>
+        <div class="field" id="adminPasswordConfirmWrap" style="display:none;">
+          <label for="adminPasswordConfirm">Confirm Password</label>
+          <input id="adminPasswordConfirm" type="password" placeholder="Confirm admin password" autocomplete="new-password">
+        </div>
+        <p class="admin-auth-note" id="adminLoginNote">This hidden admin area is protected locally on this browser.</p>
+        <div class="admin-auth-error" id="adminLoginError" role="alert" aria-live="polite"></div>
+        <button class="btn btn-primary" id="adminLoginSubmit" type="submit">Unlock Admin</button>
+      </form>
+    </div>
+  </div>
+
   <div class="modal admin-modal" id="adminModal" aria-hidden="true">
     <div class="modal-card glass">
       <button class="close-btn" id="closeAdmin" aria-label="Close admin modal">✕</button>
       <h3 style="margin-top:0; font-size:1.5rem;">Admin Booking Dashboard</h3>
       <p style="color:var(--muted); line-height:1.75; margin-bottom:0;">Manage locally saved bookings, export records, and review light inventory usage.</p>
+
+      <div class="admin-session-row">
+        <div class="admin-session-meta">
+          <strong style="font-size:1rem;">Protected admin session</strong>
+          <span id="adminSessionText" style="color:var(--muted); line-height:1.6;">No active admin session. Use Ctrl + Shift + A to request protected access.</span>
+        </div>
+        <div class="admin-session-actions">
+          <span class="status-pill ok" id="adminSessionStatus">Authenticated</span>
+          <button class="btn btn-secondary" id="lockAdminBtn" type="button">Lock Session</button>
+          <button class="btn btn-secondary" id="logoutAdminBtn" type="button">Logout</button>
+        </div>
+      </div>
+
       <div class="admin-stats" style="margin-top:18px;">
         <div class="mini-card">
           <h4 style="margin:0 0 6px;">Bookings</h4>
@@ -2161,11 +2233,13 @@
           <p id="adminInventoryLeft" style="margin:0;">Chairs -- • Tables -- • Decor --</p>
         </div>
       </div>
+
       <div class="admin-toolbar" style="grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:18px;">
         <button class="btn btn-primary" id="exportAdminJson" type="button">Export JSON</button>
         <button class="btn btn-secondary" id="resetInventoryBtn" type="button">Reset Inventory</button>
         <button class="btn btn-secondary" id="clearBookingsBtn" type="button">Delete All Bookings</button>
       </div>
+
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
@@ -2193,20 +2267,22 @@
 
   <div class="toast" id="toast">Your request has been received.</div>
 
-  
   <script>
     const body = document.body;
     const themeToggle = document.getElementById('themeToggle');
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
     const bookingModal = document.getElementById('bookingModal');
+    const adminLoginModal = document.getElementById('adminLoginModal');
     const adminModal = document.getElementById('adminModal');
     const openBooking = document.getElementById('openBooking');
     const closeBooking = document.getElementById('closeBooking');
+    const closeAdminLogin = document.getElementById('closeAdminLogin');
     const closeAdmin = document.getElementById('closeAdmin');
     const toast = document.getElementById('toast');
     const bookingForm = document.getElementById('bookingForm');
     const quickForm = document.getElementById('quickForm');
+    const adminLoginForm = document.getElementById('adminLoginForm');
     const revealEls = document.querySelectorAll('.reveal');
     const galleryCards = document.querySelectorAll('.gallery-card');
     const galleryFilters = document.querySelectorAll('.filter-btn');
@@ -2253,21 +2329,35 @@
     const analyticsBookings = document.getElementById('analyticsBookings');
     const analyticsTopPackage = document.getElementById('analyticsTopPackage');
     const analyticsRevenue = document.getElementById('analyticsRevenue');
+    const adminPassword = document.getElementById('adminPassword');
+    const adminPasswordConfirmWrap = document.getElementById('adminPasswordConfirmWrap');
+    const adminPasswordConfirm = document.getElementById('adminPasswordConfirm');
+    const adminLoginTitle = document.getElementById('adminLoginTitle');
+    const adminLoginLead = document.getElementById('adminLoginLead');
+    const adminLoginNote = document.getElementById('adminLoginNote');
+    const adminLoginError = document.getElementById('adminLoginError');
+    const adminLoginSubmit = document.getElementById('adminLoginSubmit');
     const adminBookingsCount = document.getElementById('adminBookingsCount');
     const adminTopPackage = document.getElementById('adminTopPackage');
     const adminInventoryLeft = document.getElementById('adminInventoryLeft');
     const adminBookingsTableBody = document.getElementById('adminBookingsTableBody');
     const adminEmptyState = document.getElementById('adminEmptyState');
+    const adminSessionText = document.getElementById('adminSessionText');
+    const adminSessionStatus = document.getElementById('adminSessionStatus');
     const exportAdminJson = document.getElementById('exportAdminJson');
     const resetInventoryBtn = document.getElementById('resetInventoryBtn');
     const clearBookingsBtn = document.getElementById('clearBookingsBtn');
+    const lockAdminBtn = document.getElementById('lockAdminBtn');
+    const logoutAdminBtn = document.getElementById('logoutAdminBtn');
 
     const STORAGE_KEYS = {
       theme: 'fiesta-theme',
       bookings: 'fiesta-bookings',
       inventory: 'fiesta-inventory',
       quick: 'fiesta-quick-inquiry',
-      latest: 'fiesta-booking-last'
+      latest: 'fiesta-booking-last',
+      adminPassword: 'fiesta-admin-password',
+      adminSession: 'fiesta-admin-session'
     };
 
     const DEFAULT_INVENTORY = { chairs: 120, tables: 30, decorations: 24 };
@@ -2278,6 +2368,8 @@
       'Baby Shower': ['Backdrop + cake stand is a strong baby shower combo.', 'Soft balloon styling adds color without cluttering the venue.', 'Standard package is usually enough unless your guest list is large.'],
       'Family Gathering': ['Basic or Standard package usually covers flexible seating well.', 'Add extra chairs if guest count may grow close to the event date.', 'Fairy lights give relaxed evening gatherings a warmer feel.']
     };
+
+    let adminLoginMode = 'login';
 
     function getBookings(){
       try{ return JSON.parse(localStorage.getItem(STORAGE_KEYS.bookings)) || []; }
@@ -2297,6 +2389,36 @@
     function setInventory(inventory){
       localStorage.setItem(STORAGE_KEYS.inventory, JSON.stringify(inventory));
     }
+    function getAdminSession(){
+      try{
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.adminSession));
+        return stored && typeof stored === 'object'
+          ? { authenticated:false, locked:false, loggedInAt:'', lockedAt:'', ...stored }
+          : { authenticated:false, locked:false, loggedInAt:'', lockedAt:'' };
+      }catch(err){
+        return { authenticated:false, locked:false, loggedInAt:'', lockedAt:'' };
+      }
+    }
+    function setAdminSession(session){
+      localStorage.setItem(STORAGE_KEYS.adminSession, JSON.stringify({
+        authenticated: !!session.authenticated,
+        locked: !!session.locked,
+        loggedInAt: session.loggedInAt || '',
+        lockedAt: session.lockedAt || ''
+      }));
+    }
+    function clearAdminSession(){
+      localStorage.removeItem(STORAGE_KEYS.adminSession);
+    }
+    function hasAdminPassword(){
+      return !!localStorage.getItem(STORAGE_KEYS.adminPassword);
+    }
+    function getAdminPassword(){
+      return localStorage.getItem(STORAGE_KEYS.adminPassword) || '';
+    }
+    function setAdminPasswordValue(value){
+      localStorage.setItem(STORAGE_KEYS.adminPassword, value);
+    }
     function formatMoney(value){
       return `$${Number(value || 0).toFixed(0)} AUD`;
     }
@@ -2305,6 +2427,18 @@
       const dt = new Date(value + 'T00:00:00');
       if(Number.isNaN(dt.getTime())) return value;
       return dt.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+    }
+    function formatDateTime(value){
+      if(!value) return '—';
+      const dt = new Date(value);
+      if(Number.isNaN(dt.getTime())) return '—';
+      return dt.toLocaleString(undefined, {
+        year:'numeric',
+        month:'short',
+        day:'numeric',
+        hour:'numeric',
+        minute:'2-digit'
+      });
     }
     function downloadJson(filename, data){
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2343,9 +2477,9 @@
       const decorBonus = extras.some(item => item.name === 'Backdrop') ? 1 : 0;
       const extraChairBonus = extras.some(item => item.name === 'Extra Chairs') ? 12 : 0;
       if(!meta){
-        return { meta:null, total:0, extras, builderTotal: extras.reduce((s,e)=>s+e.price,0), chairs:0, tables:0, decorations:0, ok:true };
+        return { meta:null, total:0, extras, builderTotal: extras.reduce((sum, item) => sum + item.price, 0), chairs:0, tables:0, decorations:0, ok:true };
       }
-      const builderTotal = extras.reduce((s, item) => s + item.price, 0);
+      const builderTotalAmount = extras.reduce((sum, item) => sum + item.price, 0);
       const overtime = Math.max(0, Number(setupHours.value || 0) - 4) * 18;
       const chairs = meta.chairs + chairsExtra + extraChairBonus;
       const tables = meta.tables + Math.max(0, tablesExtra);
@@ -2353,11 +2487,11 @@
       return {
         meta,
         extras,
-        builderTotal,
+        builderTotal: builderTotalAmount,
         chairs,
         tables,
         decorations,
-        total: meta.price + builderTotal + overtime,
+        total: meta.price + builderTotalAmount + overtime,
         ok:true
       };
     }
@@ -2551,27 +2685,121 @@
       clearTimeout(showToast._timer);
       showToast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
     }
+    function setAdminLoginError(message = ''){
+      adminLoginError.textContent = message;
+      adminLoginError.classList.toggle('visible', !!message);
+    }
+    function syncBodyLockState(){
+      const locked = bookingModal.classList.contains('active') || adminLoginModal.classList.contains('active') || adminModal.classList.contains('active') || lightbox.classList.contains('active');
+      document.body.classList.toggle('modal-open', locked);
+    }
+    function startAdminSession(){
+      setAdminSession({ authenticated:true, locked:false, loggedInAt:new Date().toISOString(), lockedAt:'' });
+      updateAdminSessionUI();
+    }
+    function lockAdminSession(){
+      const session = getAdminSession();
+      setAdminSession({ authenticated:true, locked:true, loggedInAt:session.loggedInAt || new Date().toISOString(), lockedAt:new Date().toISOString() });
+      updateAdminSessionUI();
+    }
+    function logoutAdminSession(){
+      clearAdminSession();
+      updateAdminSessionUI();
+    }
+    function isAdminAuthenticated(){
+      const session = getAdminSession();
+      return session.authenticated === true && session.locked !== true;
+    }
+    function updateAdminSessionUI(){
+      const session = getAdminSession();
+      const active = session.authenticated === true && session.locked !== true;
+      adminSessionStatus.textContent = active ? 'Authenticated' : (session.locked ? 'Locked' : 'Logged out');
+      adminSessionStatus.className = `status-pill ${active ? 'ok' : 'warn'}`;
+      adminSessionText.textContent = active
+        ? `Verified on ${formatDateTime(session.loggedInAt)}. Hidden admin tools are unlocked on this browser.`
+        : session.locked
+          ? `Session locked on ${formatDateTime(session.lockedAt)}. Use the hidden shortcut and re-enter the password to continue.`
+          : 'No active admin session. Use Ctrl + Shift + A to request protected access.';
+    }
     function openModal(){
       bookingModal.classList.add('active');
       bookingModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('modal-open');
+      syncBodyLockState();
     }
     function closeModal(){
       bookingModal.classList.remove('active');
       bookingModal.setAttribute('aria-hidden', 'true');
-      if(!adminModal.classList.contains('active')) document.body.classList.remove('modal-open');
+      syncBodyLockState();
+    }
+    function openAdminLogin(mode = 'login'){
+      adminLoginMode = mode;
+      const isSetup = mode === 'setup';
+      const isUnlock = mode === 'unlock';
+      adminLoginTitle.textContent = isSetup ? 'Set Admin Password' : (isUnlock ? 'Unlock Admin Session' : 'Admin Access');
+      adminLoginLead.textContent = isSetup
+        ? 'Create the local admin password for this browser before opening the hidden dashboard.'
+        : (isUnlock
+          ? 'This admin session is locked. Re-enter the admin password to unlock the dashboard.'
+          : 'Enter the admin password to open the hidden dashboard.');
+      adminLoginNote.textContent = isSetup
+        ? 'This password is stored only in this browser using localStorage. Keep it somewhere safe.'
+        : 'Protected admin access is verified locally on this browser before any admin tools are shown.';
+      adminPassword.placeholder = isSetup ? 'Create admin password' : 'Enter admin password';
+      adminPassword.value = '';
+      adminPasswordConfirm.value = '';
+      adminPasswordConfirmWrap.style.display = isSetup ? 'grid' : 'none';
+      adminPasswordConfirm.required = isSetup;
+      adminPassword.setAttribute('autocomplete', isSetup ? 'new-password' : 'current-password');
+      adminLoginSubmit.textContent = isSetup ? 'Create Password & Open Admin' : (isUnlock ? 'Unlock Admin' : 'Login to Admin');
+      setAdminLoginError('');
+      adminLoginModal.classList.add('active');
+      adminLoginModal.setAttribute('aria-hidden', 'false');
+      syncBodyLockState();
+      setTimeout(() => adminPassword.focus(), 30);
+    }
+    function closeAdminLoginModal(){
+      adminLoginModal.classList.remove('active');
+      adminLoginModal.setAttribute('aria-hidden', 'true');
+      adminLoginForm.reset();
+      adminPasswordConfirmWrap.style.display = 'none';
+      adminPasswordConfirm.required = false;
+      setAdminLoginError('');
+      syncBodyLockState();
+    }
+    function handleAdminAccessRequest(){
+      if(!hasAdminPassword()){
+        openAdminLogin('setup');
+        return;
+      }
+      const session = getAdminSession();
+      if(session.authenticated === true && session.locked !== true){
+        openAdmin();
+        return;
+      }
+      openAdminLogin(session.locked ? 'unlock' : 'login');
     }
     function openAdmin(){
+      if(!isAdminAuthenticated()){
+        handleAdminAccessRequest();
+        return;
+      }
       adminModal.classList.add('active');
       adminModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('modal-open');
       renderAnalytics();
       renderAdminTable();
+      updateAdminSessionUI();
+      syncBodyLockState();
     }
     function closeAdminPanel(){
       adminModal.classList.remove('active');
       adminModal.setAttribute('aria-hidden', 'true');
-      if(!bookingModal.classList.contains('active')) document.body.classList.remove('modal-open');
+      syncBodyLockState();
+    }
+    function requireAdminAccess(){
+      if(isAdminAuthenticated()) return true;
+      handleAdminAccessRequest();
+      showToast('Admin verification required.');
+      return false;
     }
     function scrollFieldIntoView(target){
       if(!target) return;
@@ -2585,6 +2813,7 @@
       body.setAttribute('data-theme', 'light');
       themeToggle.textContent = '☀';
     }
+
     themeToggle.addEventListener('click', () => {
       const isLight = body.getAttribute('data-theme') === 'light';
       if(isLight){
@@ -2605,7 +2834,9 @@
     function updateActiveNav(){
       const scrollPos = window.scrollY + 140;
       let currentId = '';
-      sections.forEach(section => { if(scrollPos >= section.offsetTop){ currentId = section.id; } });
+      sections.forEach(section => {
+        if(scrollPos >= section.offsetTop){ currentId = section.id; }
+      });
       navAnchors.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + currentId));
     }
     window.addEventListener('scroll', updateActiveNav, { passive:true });
@@ -2617,14 +2848,21 @@
 
     openBooking?.addEventListener('click', openModal);
     closeBooking?.addEventListener('click', closeModal);
+    closeAdminLogin?.addEventListener('click', closeAdminLoginModal);
     closeAdmin?.addEventListener('click', closeAdminPanel);
-    bookingModal?.addEventListener('click', (e) => { if(e.target === bookingModal) closeModal(); });
-    adminModal?.addEventListener('click', (e) => { if(e.target === adminModal) closeAdminPanel(); });
+    bookingModal?.addEventListener('click', (e) => {
+      if(e.target === bookingModal) closeModal();
+    });
+    adminLoginModal?.addEventListener('click', (e) => {
+      if(e.target === adminLoginModal) closeAdminLoginModal();
+    });
+    adminModal?.addEventListener('click', (e) => {
+      if(e.target === adminModal) closeAdminPanel();
+    });
 
     packageButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const pkg = btn.dataset.package || '';
-        const price = btn.dataset.price || '0';
         quickPackage.value = pkg;
         [...packageSelect.options].forEach(option => {
           if(option.value === pkg){ packageSelect.value = option.value; }
@@ -2638,14 +2876,20 @@
       card.addEventListener('click', () => {
         lightboxImage.src = card.getAttribute('data-image');
         lightbox.classList.add('active');
+        syncBodyLockState();
       });
     });
     closeLightbox.addEventListener('click', () => {
       lightbox.classList.remove('active');
       lightboxImage.src = '';
+      syncBodyLockState();
     });
     lightbox.addEventListener('click', (e) => {
-      if(e.target === lightbox){ lightbox.classList.remove('active'); lightboxImage.src = ''; }
+      if(e.target === lightbox){
+        lightbox.classList.remove('active');
+        lightboxImage.src = '';
+        syncBodyLockState();
+      }
     });
     galleryFilters.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -2659,8 +2903,14 @@
       });
     });
 
-    chipToggles.forEach(btn => btn.addEventListener('click', () => { btn.classList.toggle('active'); updateQuoteUI(); }));
-    [packageSelect, guestCount, setupHours, eventType, eventDate].forEach(el => el.addEventListener('input', () => { updateQuoteUI(); updateSuggestions(); }));
+    chipToggles.forEach(btn => btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      updateQuoteUI();
+    }));
+    [packageSelect, guestCount, setupHours, eventType, eventDate].forEach(el => el.addEventListener('input', () => {
+      updateQuoteUI();
+      updateSuggestions();
+    }));
     venueInput.addEventListener('input', updateQuoteUI);
 
     bookingForm.addEventListener('submit', (e) => {
@@ -2668,10 +2918,12 @@
       const booking = collectBookingFromForm();
       if(!booking) return;
       submitBookingBtn.classList.add('loading-state');
+      submitBookingBtn.disabled = true;
       submitBookingBtn.textContent = 'Saving...';
       setTimeout(() => {
         saveBooking(booking);
         submitBookingBtn.classList.remove('loading-state');
+        submitBookingBtn.disabled = false;
         submitBookingBtn.textContent = 'Save Booking';
         showToast('Booking saved and invoice generated.');
       }, 550);
@@ -2705,20 +2957,56 @@
       document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
     });
 
+    adminLoginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = adminPassword.value;
+      const confirmPassword = adminPasswordConfirm.value;
+      if(adminLoginMode === 'setup'){
+        if(password.trim().length < 6){
+          setAdminLoginError('Use at least 6 characters for the admin password.');
+          return;
+        }
+        if(password !== confirmPassword){
+          setAdminLoginError('Passwords do not match.');
+          return;
+        }
+        setAdminPasswordValue(password);
+        startAdminSession();
+        closeAdminLoginModal();
+        openAdmin();
+        showToast('Admin password created and session unlocked.');
+        return;
+      }
+      if(password !== getAdminPassword()){
+        setAdminLoginError('Incorrect admin password. Please try again.');
+        return;
+      }
+      startAdminSession();
+      closeAdminLoginModal();
+      openAdmin();
+      showToast(adminLoginMode === 'unlock' ? 'Admin session unlocked.' : 'Admin login successful.');
+    });
+
     adminBookingsTableBody.addEventListener('click', (e) => {
+      if(!requireAdminAccess()) return;
       const btn = e.target.closest('[data-delete-booking]');
       if(!btn) return;
       deleteBooking(btn.dataset.deleteBooking);
     });
-    exportAdminJson.addEventListener('click', () => downloadJson('fiesta-bookings.json', getBookings()));
+    exportAdminJson.addEventListener('click', () => {
+      if(!requireAdminAccess()) return;
+      downloadJson('fiesta-bookings.json', getBookings());
+    });
     downloadBookingsBtn.addEventListener('click', () => downloadJson('fiesta-bookings.json', getBookings()));
     resetInventoryBtn.addEventListener('click', () => {
+      if(!requireAdminAccess()) return;
       setInventory({ ...DEFAULT_INVENTORY });
       renderAnalytics();
       updateQuoteUI();
       showToast('Inventory reset to default stock.');
     });
     clearBookingsBtn.addEventListener('click', () => {
+      if(!requireAdminAccess()) return;
       setBookings([]);
       setInventory({ ...DEFAULT_INVENTORY });
       renderAnalytics();
@@ -2726,6 +3014,17 @@
       updateQuoteUI();
       invoicePreview.classList.remove('visible');
       showToast('All locally saved bookings deleted.');
+    });
+    lockAdminBtn.addEventListener('click', () => {
+      if(!requireAdminAccess()) return;
+      lockAdminSession();
+      closeAdminPanel();
+      showToast('Admin session locked.');
+    });
+    logoutAdminBtn.addEventListener('click', () => {
+      logoutAdminSession();
+      closeAdminPanel();
+      showToast('Admin logged out.');
     });
     printInvoiceBtn.addEventListener('click', () => {
       if(!invoicePreview.classList.contains('visible')){
@@ -2738,13 +3037,15 @@
     document.addEventListener('keydown', (e) => {
       if(e.key === 'Escape'){
         closeModal();
+        closeAdminLoginModal();
         closeAdminPanel();
         lightbox.classList.remove('active');
         lightboxImage.src = '';
+        syncBodyLockState();
       }
       if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a'){
         e.preventDefault();
-        openAdmin();
+        handleAdminAccessRequest();
       }
     });
     document.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('focus', () => scrollFieldIntoView(el)));
@@ -2755,6 +3056,7 @@
       if(latest){ renderInvoice(latest); }
       renderAnalytics();
       renderAdminTable();
+      updateAdminSessionUI();
       updateSuggestions();
       updateQuoteUI();
       setTimeout(() => {
